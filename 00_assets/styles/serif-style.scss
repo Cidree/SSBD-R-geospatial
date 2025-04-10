@@ -1,0 +1,121 @@
+
+/*-- scss:defaults --*/
+
+// Colors
+$color-primary-light: #CCCCCC;
+$color-primary-dark: #153E4B;
+$color-secondary-light: #ECECEC;
+$color-secondary-dark: #5B637C;
+$color-red-light: #F3A48E;
+$color-black: #272727;
+$color-white: #FCFCFC;
+$color-pink: #FB6376;
+$color-darkgreen: #233329;
+$color-green: #17B890;
+
+// Apply colors
+$body-color: $color-black;
+$link-color: #304D6D;
+
+// Fonts
+$font-family-sans-serif: Lato, Arial, sans-serif;
+$presentation-font-size-root: 30px;
+$font-family-monospace: Cascadia Code;
+
+// Headings
+$presentation-heading-font: Merriweather;
+
+// Code blocks
+$code-block-border-color: $color-secondary-dark;
+$border-width: 5px;
+$code-block-font-size: .65em;
+
+/*-- scss:rules --*/
+
+h1, h2, h3 {
+  color: $color-darkgreen;
+}
+
+.main-part {
+  &:is(.slide-background) {
+    background: $color-darkgreen;
+  }
+  
+  & p {
+    color: $color-secondary-light;
+  }
+  
+  & .fa-solid, .fab, .fa-brands {
+    color: $color-secondary-light;
+}
+  
+}
+
+.fa-solid, .fab, .fa-brands {
+    color: $color-darkgreen;
+}
+
+.fa-xmark,
+.fa-exclamation {
+  color: $color-pink;
+}
+
+.fa-check {
+  color: $color-green;
+}
+
+.special-size {
+  font-size: 25px;
+  & .cell-output-display:not(.no-overflow-x), 
+  .knitsql-table:not(.no-overflow-x) {
+    font-size: 15px;
+  }
+}
+
+.exercise {
+  font-size: 25px;
+  
+  & h2 {
+    font-size: 60px;
+  }
+  
+  &:is(.slide-background) {
+    background: $color-darkgreen;
+  }
+  
+  & .cell-output-display:not(.no-overflow-x), 
+  .knitsql-table:not(.no-overflow-x) {
+    font-size: 15px;
+  }
+  
+  .sourceCode {
+    font-size: 1.3rem;
+  }
+}
+
+.reveal div.qwebr-output-code-area pre {
+  background-color: $color-secondary-light;
+}
+
+.reveal .drop .cm-editor span.tok-operator {
+  color: $color-black !important;
+}
+
+.small-size {
+  font-size: 25px;
+  & .cell-output-display:not(.no-overflow-x), 
+  .knitsql-table:not(.no-overflow-x) {
+    font-size: 15px;
+  }
+  
+  & h1, h2 {
+    font-size: 45px;
+  }
+  
+  & panel-tabset {
+    font-size: 20px;
+  }
+  
+}
+
+

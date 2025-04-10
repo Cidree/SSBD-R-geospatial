@@ -1,0 +1,72 @@
+/*-- scss:defaults --*/
+
+// Colors
+$color-primary-light: #CCCCCC;
+$color-primary-dark: #153E4B;
+$color-secondary-light: #ECECEC;
+$color-secondary-dark: #5B637C;
+$color-red-light: #F3A48E;
+$color-black: black;
+$color-white: white;
+
+$body-bg: $color-primary-dark;
+$body-color: $color-primary-light;
+
+// Secondary colors
+$link-color: $color-red-light !default;
+$selection-bg: 	lighten($color-red-light, 25%);
+
+// Fonts
+$font-family-sans-serif: Lato, Arial, sans-serif;
+$presentation-font-size-root: 1rem;
+
+$font-family-monospace: "Source Code";
+
+// Headings
+$presentation-heading-font: Lato, Arial, sans-serif;
+$presentation-heading-color: $color-secondary-light !default;
+$presentation-heading-text-transform: uppercase;
+$presentation-heading-text-shadow: 5px 2px 2px $color-black;
+$presentation-h1-text-shadow: 5px 2px 2px $color-black;
+$presentation-title-slide-text-align: center;
+h2 {
+  text-align: center;
+}
+
+// Code blocks
+$border-color: $color-red-light;
+$border-width: 2px;
+$border-radius: 10px;
+
+/*-- scss:rules --*/
+
+// Slides
+.slide-background-content {
+  border: 10px solid $color-secondary-light;
+}
+
+// Logo
+.slide-logo {
+  position: relative;
+  left: 2rem;
+  top: 2rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
