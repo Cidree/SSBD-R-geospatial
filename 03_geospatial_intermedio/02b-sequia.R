@@ -7,6 +7,8 @@
 # OBJETIVOS:
 # - Descarga de datos de precipitación
 # - Programación funcional
+# - Procesamiento de múltiples rásters
+# - Crear mapas del número de días secos
 
 # 1. Cargar paquetes -----------------------------------------------------
 
@@ -24,7 +26,7 @@ study_area_sf <- gisco_get_nuts(country = "ES", nuts_level = 2) |>
 ## 2.2. Datos de sequía -------------------
 
 ## archivos a leer
-prec_paths <- list.files("00_data/02-geospatial-intermedio/", full.names = TRUE)
+prec_paths <- list.files("00_data/02-geospatial-intermedio/prec_chirps/", full.names = TRUE)
 
 ## leer archivos
 prec_list <- map(prec_paths, rast)

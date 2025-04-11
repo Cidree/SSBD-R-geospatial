@@ -54,7 +54,7 @@ download_chirps <- function(year) {
   )
 
   ## exportar
-  writeRaster(muestra_sr, str_glue("00_data/02-geospatial-intermedio/prec_{year}.tiff"), overwrite = TRUE)
+  writeRaster(muestra_sr, str_glue("00_data/02-geospatial-intermedio/prec_chirps/prec_{year}.tiff"), overwrite = TRUE)
   message(str_glue("Año {year} terminado"))
 
 }
