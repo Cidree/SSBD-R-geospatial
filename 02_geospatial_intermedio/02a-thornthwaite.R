@@ -1,15 +1,15 @@
 # SUMMER SCHOOL - BOSQUE DIGITAL - UNIVERSIDAD DE CÓRDOBA
 #
 # Clase: Introducción al análisis geoespacial con R - Parte 2
-# Ejercicio 03 - Thornwaite Aridity Index
+# Ejercicio 03a - Thornthwaite Moisture Index
 # 
 #
 # OBJETIVOS:
 # - Álgebra de rásters
 # - Calcular evapotranspiración potencial corregida (ETP)
-# - Calcular Indice de Aridez de Thornthwaite
-# - Calcular Indice de Humedad de Thornthwaite
-# - Calcular 
+# - Calcular Indice de Aridez estacional de Thornthwaite
+# - Calcular Indice de Humedad estacional de Thornthwaite
+# - Calcular Indice de Humedad global de Thornthwaite
 #
 # RECURSOS:
 # - https://portalrediam.cica.es/descargas/
@@ -18,12 +18,11 @@
 # - Thornthwaite, C.W. (1948). An approach toward a rational classification of climate. Geographical Review, 38, 55-94.
 
 
-
 # 1. Cargar paquetes -----------------------------------------------------
 
 library(pacman)
 
-p_load(envirem, geodata, giscoR, sf, terra, tidyverse, tidyterra)
+p_load(envirem, geodata, giscoR, sf, terra, tidyverse, tidyterra, units)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -131,6 +130,7 @@ hist(pet_sr)
 
 ## identificar déficit de precipitación (precipitación < evapotranspiración)
 is_deficit_sr <- prec_sr < pet_sr
+plot(is_deficit_sr, , col = c("#B6465F", "#85FF9E"))
 
 ## calcular déficit como evapostranspiración - precipitación
 total_deficit_sr <- ifel(is_deficit_sr, pet_sr - prec_sr, 0) |> sum()
@@ -178,46 +178,10 @@ reclassify_index_thornthwaite <- function(raster) {
 
 ## aplicar reclasificación
 indice_thornthwaite_class_sr <- reclassify_index_thornthwaite(indice_thornthwaite_sr)
+names(indice_thornthwaite_class_sr) <- "tmi"
 
-
-## 3.3. Indice de Humedad (Feddema, 2005) ------------
-
-## calcular Indice Climático de Humedad
-## - Clasificación Feddema 2005
-indice_feddema_sr <- envirem::climaticMoistureIndex(sum(prec_sr), sum(pet_sr))
-
-## función para reclasificar
-reclassify_cmi_feddema <- function(raster) {
-
-    ## matriz de reclasificación
-    mat <- matrix(
-        c(
-            -1, -.66, 1,
-            -.66, -.33, 2,
-            -.33, 0, 3,
-            0, .33, 4,
-            .33, .66, 5,
-            .66, 1, 6
-        ),
-        ncol  = 3, 
-        byrow = TRUE
-    )
-
-    ## reclasificar
-    raster_class <- classify(raster, mat) |> as.factor()
-    return(raster_class)
-
-}
-
-## aplicar reclasificación
-indice_feddema_class_sr <- reclassify_cmi_feddema(indice_feddema_sr)
-
-
-## 3.4. Guardar rasters ------------------------------
-
-## guardar resultado
+## exportar
 writeRaster(indice_thornthwaite_class_sr, "00_data/02-geospatial-intermedio/indice_thornthwaite_class.tiff", overwrite = TRUE)
-writeRaster(indice_feddema_class_sr, "00_data/02-geospatial-intermedio/indice_feddema_class.tiff", overwrite = TRUE)
 
 
 # 4. Generar mapa --------------------------------------------------------
@@ -270,3 +234,61 @@ ggplot() +
             margin = margin(b = 10, unit = "mm")
         )
     )
+
+
+## 4.2. Gráfico ------------------------------
+
+## -> representación del área total de cada tipo climático
+
+## Gráfico de superficie de cada clase
+tmi_sf <- indice_thornthwaite_class_sr |> 
+    as.polygons() |> 
+    st_as_sf()
+
+## convertir a tabla preparada para graficar
+tmi_tbl <- tmi_sf |> 
+    mutate(area = st_area(geometry) |> units::set_units(km2) |> as.numeric()) |> 
+    mutate(perc = area / sum(area) * 100) |> 
+    mutate(perc_label = paste0(round(perc, 1), "%")) |> 
+    st_drop_geometry() |> 
+    mutate(
+        class = case_match(
+            as.character(tmi),
+            "1" ~ "Árido",
+            "2" ~ "Semiárido",
+            "3" ~ "Sub-Húmedo seco",
+            "4" ~ "Sub-Húmedo húmedo",
+            "5" ~ "Ligeramente húmedo",
+            "6" ~ "Moderadamente húmedo",
+            "7" ~ "Húmedo",
+            "8" ~ "Muy húmedo",
+            "9" ~ "Excesivamente húmedo"
+        )
+    )
+
+## gráfico
+tmi_tbl |> 
+  ggplot(aes(x = fct_reorder(class, tmi), y = area)) +
+  geom_col(width = 0.6, fill = "#2C0703") +
+  geom_text(
+    aes(label = perc_label),
+    vjust = -0.5,
+    size = 5,
+    color = "black"
+  ) +
+  labs(
+    title = str_glue("Superficie de cada tipo climático en {selected_ccaa}, España"),
+    x = NULL,
+    y = "Área (km²)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.margin = margin(10, 10, 10, 10),
+    plot.title           = element_text(
+        face   = "bold",
+        size   = 22,
+        hjust  = .5,
+        margin = margin(b = 10, unit = "mm")
+    )
+  ) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.1)))
