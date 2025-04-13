@@ -6,12 +6,14 @@
 # 
 #
 # OBJETIVOS:
+# - Descargar datos de EU-Trees4F
+# - Crear mapas de distribución potencial en escenarios de cambio climático
 
 # 1. Cargar paquetes -----------------------------------------------------
 
 library(pacman)
 
-p_load(forestdata, ggtext, patchwork, terra, tidyterra, tidyverse)
+p_load(forestdata, terra, tidyterra, tidyverse)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -70,84 +72,63 @@ ps_colors  <- c("#BE92A2", "#96031A", "#6DA34D", "#CEEDDB")
 especie_rcp45_sr <- reclassify_rcp(especie_2095_rcp45_sr, ps_classes)
 especie_rcp85_sr <- reclassify_rcp(especie_2095_rcp85_sr, ps_classes)
 
+## unir en un solo raster
+especie_stack_sr <- c(especie_rcp45_sr, especie_rcp85_sr)
+names(especie_stack_sr) <- c("RCP 4.5", "RCP 8.5")
+
 ## 3.2. Visualización exploratoria -----------------
 
-plot(especie_rcp45_sr, col = ps_colors)
+plot(especie_stack_sr, col = ps_colors)
 plot(especie_rcp85_sr, col = ps_colors)
 
 
-# 4. Visualization --------------------------------------------------------
+# 4. Visualización --------------------------------------------------------
 
-## Create a helper function
-map_rcp <- function(data, title = "(a) RCP 4.5") {
-  
-  ggplot() +
-    geom_spatraster(
-      data = data,
-      show.legend = FALSE
-    ) +
-    scale_fill_manual(
-      values   = ps_colors,
-      na.value = NA
-    ) +
-    labs(
-      title = title
-    ) +
-    theme_void(base_family = "Roboto") +
-    theme(
-      plot.title = element_text(
-        face = "bold", hjust = .5, color = "snow"
-      )
+ggplot() +
+  geom_spatraster(
+    data = especie_stack_sr
+  ) +
+  scale_fill_manual(
+    values   = ps_colors,
+    na.value = NA,
+    na.translate = FALSE
+  ) +
+  facet_wrap(vars(lyr)) +
+  labs(
+    title = str_glue("Distribución de {especie} en dos escenarios de cambio climático"),
+    caption = "Autor: Adrián Cidre | Fuente datos: EU-Trees4F"
+  ) +
+  guides(
+    fill = guide_legend(
+      title          = NULL,
+      position       = "top",
+      label.position = "top"
     )
-  
-}
-
-## Create maps
-rcp45_gg <- map_rcp(especie_rcp45_sr)
-rcp85_gg <- map_rcp(especie_rcp85_sr, title = "(b) RCP 8.5")
-
-## Wrappers for {ggtext}
-absent_txt   <- str_glue("<b style = 'color: {ps_colors[1]};'>almost absent</b>")
-decrease_txt <- str_glue("<b style = 'color: {ps_colors[2]};'>decrease</b>")
-increase_txt <- str_glue("<b style = 'color: {ps_colors[3]};'>shift</b>")
-present_txt  <- str_glue("<b style = 'color: {ps_colors[4]};'>present</b>")
-
-## Plot title
-title_txt <- str_glue(
-  "*Pinus sylvestris*, {absent_txt} in southern Europe and {present_txt} in Northern and Central Europe, is<br>
-  projected to {increase_txt} its potential distribution northward and {decrease_txt} in Central Europe under two<br>
-  climatic scenarios by 2095"
-)
-
-## Final maps
-ps_gg <- rcp45_gg + 
-  rcp85_gg +
-  plot_annotation(
-    title   = title_txt,
-    caption = "Author: Adrián Cidre | Data source: EU-Trees4F",
-    theme   = theme(
-      plot.title = element_markdown(
-        family     = "Merriweather",
-        face       = "bold",
-        lineheight = 1.2,
-        margin     = margin(t = 5, l = 5, b = 10)
-      ),
-      plot.caption = element_text(
-        hjust  = .5,
-        family = "Roboto"
-      ),
-      plot.background = element_rect(
-        fill = "gray10",
-        colour = "gray10"
-      )
+  ) +
+  theme_void(base_family = "Roboto", base_size = 16) +
+  theme(
+    text = element_text(color = "snow"),
+    plot.title = element_text(
+      face       = "bold", 
+      hjust      = .5, 
+      color      = "snow",
+      lineheight = 1.2,
+      margin     = margin(t = 5, l = 5, b = 10)
+    ),
+    plot.caption = element_text(hjust  = .5),
+    plot.background = element_rect(
+      fill   = "gray10",
+      colour = NA
+    ),
+    legend.key.width     = unit(50, "mm"),
+    legend.key.height    = unit(3, "mm"),
+    legend.key.spacing.x = unit(0, "mm"),
+    strip.text = element_text(
+      face   = "bold",
+      size   = 20,
+      margin = margin(t = 5, unit = "mm")
     )
-  ) 
+  )
 
-## Export
-ggsave(
-  filename = "005_pinus_sylvestris_rcp_map/especie_rcp.png",
-  plot     = ps_gg,
-  width    = 25,
-  height   = 20,
-  units    = "cm"
-)
+
+
