@@ -21,7 +21,8 @@ p_load(geodata, giscoR, sf, tidyverse)
 
 ## 2.1. Ocurrencias de lobo -------------------
 
-## descargar ocurrencias de lobo en el año 2024 (GBIF)
+## descargar ocurrencias de lobo en el año 2024
+## - Global Biodiversity Information Facility: https://www.gbif.org/
 lobo_df <- geodata::sp_occurrence(
   genus   = "Canis",
   species = "lupus",

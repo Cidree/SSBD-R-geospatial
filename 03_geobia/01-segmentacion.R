@@ -1,7 +1,10 @@
 # SUMMER SCHOOL - BOSQUE DIGITAL - UNIVERSIDAD DE CÓRDOBA
 #
 # Clase: Clasificación de usos del suelo en R (GEOBIA)
-# 
+#
+# Imágenes descargadas (Centro Descargas CNIG):
+# - PNOA-MA-OF-ETRS89-HU29-H25-0046-2.tif
+# - PNOA-MA-IRG-OF-ETRS89-HU29-H25-0046-2.tif
 #
 # OBJETIVOS:
 # - Descarga de Orfeo Toolbox
@@ -12,7 +15,7 @@
 
 library(pacman)
 
-p_load(arrow, geoarrow, link2GI, mapview, OTBsegm, sf, terra, tictoc, tidyverse)
+p_load(arrow, geoarrow, link2GI, mapview, OTBsegm, sf, terra, tidyverse)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -24,39 +27,39 @@ ortofoto_sr <- rast("00_data/03-geobia/ortofoto-downsample.tiff")
 ## para ver cuáles son los mejores parámetros para nuestro caso
 
 ## cortar area pequeña
-sample_sr <- crop(ortofoto_sr, ext(615000, 615000 + 500, 4697000, 4697000 + 500))
+sample_sr <- crop(ortofoto_sr, ext(585000, 585000 + 500, 4790000, 4790000 + 500))
 
 ## visualizar
 plotRGB(sample_sr)
 
 ## localizar OTB
-otblink <- linkOTB(searchLocation = "C:/OTB")
+otblink <- linkOTB(searchLocation = "C:/OTB/")
 
 ## segmentar
 segment_sr <- segm_lsms(
     image    = sample_sr,
     otb      = otblink,
     spatialr = 5,
-    ranger   = 15,
-    minsize  = 100
+    ranger   = 25,
+    minsize  = 200
 )
 
 ## visualizar resultado
 plotRGB(sample_sr)
-plot(sf::st_geometry(segment_sr), add = TRUE)
+plot(sf::st_geometry(segment_sr), add = TRUE, border = "gray90")
 
 ## segmentar
 segment_ms_sr <- segm_meanshift(
     image    = sample_sr,
     otb      = otblink,
     spatialr = 5,
-    ranger   = 15,
-    minsize  = 100
+    ranger   = 20,
+    minsize  = 200
 )
 
 ## visualizar resultado
 plotRGB(sample_sr)
-plot(sf::st_geometry(segment_ms_sr), add = TRUE)
+plot(sf::st_geometry(segment_ms_sr), add = TRUE, border = "gray90")
 
 # 4. Segmentación completa -----------------------------------------------
 
@@ -67,14 +70,14 @@ plot(sf::st_geometry(segment_ms_sr), add = TRUE)
 ## - Menos efectos de borde
 ## - Menor complejidad
 
-## segmentar (1h 42min)
-segment_sr <- segm_lsms(
+## segmentar (22min)
+segment_sr <- segm_meanshift(
     image    = ortofoto_sr,
     otb      = otblink,
     spatialr = 5,
-    ranger   = 15,
-    minsize  = 100,
-    tilesize = 1000
+    ranger   = 20,
+    minsize  = 200,
+    vector_tilesize = 5000
 )
 
 ## 4.2. OPCIÓN 2 - Aplicar por barches ----------
@@ -82,6 +85,7 @@ segment_sr <- segm_lsms(
 ## Aplicar por batches
 ## - Menos instensivo para el ordenador
 ## - Más rápido
+## - Muchos archivos de menor peso
 ## - Más efectos de borde
 ## - Necesidad de realizar más pasos
 
@@ -98,19 +102,19 @@ tiles_sf <- st_make_grid(
 mapview(tiles_sf)
 
 ## función para segmentar por tile
-segment_tile_lsms <- function(tile) {
+segment_tile <- function(tile) {
 
     ## cortar imagen a la tile
     ortofoto_tile_sr <- crop(ortofoto_sr, tile)
 
     ## segmentar
-    segment_sf <- segm_lsms(
+    segment_sf <- segm_meanshift(
         image    = ortofoto_tile_sr,
         otb      = otblink,
         spatialr = 5,
-        ranger   = 15,
-        minsize  = 100,
-        tilesize = 4000
+        ranger   = 20,
+        minsize  = 200,
+        vector_tilesize = 5000
       )
   
     ## seleccionar columna geometria
@@ -119,15 +123,15 @@ segment_tile_lsms <- function(tile) {
 }
 
 ## aplicar función a todos los tiles
-## - Duración: 1-2min/tile ~ 39min
+## - Duración: ~1min/tile ~ 20min
 segment_list <- map(
     split(tiles_sf, tiles_sf$rowid),
-    segment_tile_lsms
+    segment_tile
 )
 
 ## exportar
 map2(
     segment_list,
     1:length(segment_list),
-    \(x, y) write_parquet(x, glue::glue("00_data/03-geobia/lsms_tiles/{y}_segmentation_lsms.parquet"))
+    \(x, y) write_parquet(x, glue::glue("00_data/03-geobia/ms_tiles/{y}_segmentation_ms.parquet"))
 )

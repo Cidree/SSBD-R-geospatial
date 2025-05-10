@@ -18,7 +18,7 @@
 
 library(pacman)
 
-p_load(geodata, geoperu, mapview, sf, terra, tidyverse)
+p_load(geodata, geoperu, mapview, sf, spocc, terra, tidyverse)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -26,16 +26,18 @@ p_load(geodata, geoperu, mapview, sf, terra, tidyverse)
 manu_sf <- get_anp_peru(anp = "Manu")
 
 ## Cargar datos oso andino en el Manu
-oso_andino_tbl <- sp_occurrence(
-  genus   = "Tremarctos",
-  species = "ornatus",
-  ext     = ext(manu_sf)
+oso_andino_occ <- occ(
+  query      = "Tremarctos ornatus",
+  from       = c("gbif", "inat"),
+  geometry   = st_bbox(manu_sf),
+  has_coords = TRUE
 )
 
 ## convertir a SF
-oso_andino_sf <- st_as_sf(
-  oso_andino_tbl,
-  coords = c("lon", "lat"),
+oso_andino_sf <- oso_andino_occ |> 
+  occ2df() |> 
+  st_as_sf(
+  coords = c("longitude", "latitude"),
   crs    = "EPSG:4326"
 ) |> 
   select(geometry)

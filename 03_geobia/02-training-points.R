@@ -5,13 +5,13 @@
 #
 # OBJETIVOS:
 # - Toma de datos para modelizar (QGIS)
-# - Focal statistics: extraer valores de la segmentación
+# - Focal statistics: extraer valores de la ortofoto
 
 # 1. Cargar paquetes -----------------------------------------------------
 
 library(pacman)
 
-p_load(arrow, geoarrow, exactextractr, sf, terra, tidyverse)
+p_load(arrow, geoarrow, exactextractr, mapview, sf, terra, tidyverse)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -21,7 +21,7 @@ names(ortofoto_sr) <- c("R", "G", "B")
 
 ## segmentacion
 segment_list <- map(
-  list.files("00_data/03-geobia/lsms_tiles/", full.names = TRUE),
+  list.files("00_data/03-geobia/ms_tiles/", full.names = TRUE),
   \(x) open_dataset(x) |> st_as_sf()
 )
 
@@ -46,9 +46,12 @@ fstats_df <- exact_extract(
 selected_segment_stats_sf <- bind_cols(selected_segment, fstats_df)
 
 ## añadir clase, y filtrar solamente puntos que caen en esa tile
-st_join(selected_segment_stats_sf, points_sf) |> 
-  filter(!is.na(class))
+points_selected_stats_sf <- st_join(points_sf, selected_segment_stats_sf) |> 
+  filter(!is.na(median.R))
 
+## visualizar
+mapview(selected_segment_stats_sf, color = "red", alpha.regions = 0) +
+  mapview(points_selected_stats_sf, col.regions = "yellow")
 
 # 4. Fstats - Entero -----------------------------------------------------
 
@@ -67,14 +70,12 @@ segment_fstats <- function(segment) {
   bind_cols(segment, segment_stats_sf)
 }
 
-## focal statistics (duración ~ 7min)
-tic()
+## focal statistics (duración ~ 4min)
 segment_stats_list <- map(
   segment_list,
   segment_fstats,
   .progress = TRUE
 )
-toc()
 
 ## exportar
 map2(
@@ -82,7 +83,7 @@ map2(
   1:length(segment_stats_list),
   \(segment_tile, id) write_parquet(
     segment_tile,
-    glue::glue("00_data/03-geobia/lsms_tiles_stats/{id}_segment_stats.parquet")
+    glue::glue("00_data/03-geobia/ms_tiles_stats/{id}_segment_stats.parquet")
   )
 )
 
@@ -97,8 +98,8 @@ map2(
 ## extraer valores de la segmentación en la localización de los puntos, tile by tile
 point_stats_list <- map(
   segment_stats_list,
-  \(segment_stat) st_join(segment_stat, points_sf) |> 
-    filter(!is.na(class))
+  \(segment_stat) st_join(points_sf, segment_stat) |> 
+    filter(!is.na(median.R))
 )
 
 ## unir en un solo objeto

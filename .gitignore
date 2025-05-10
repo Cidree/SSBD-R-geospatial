@@ -8,3 +8,5 @@
 00_data/03-geobia/segmentation-lsms.parquet
 00_data/03-geobia/segmentation-meanshift.parquet
 00_data/03-geobia/ortofoto-downsample.tiff
+00_data/03-geobia/rgb-nir-downsample.tiff
+00_data/test
