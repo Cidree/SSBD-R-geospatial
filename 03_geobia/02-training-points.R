@@ -5,7 +5,7 @@
 #
 # OBJETIVOS:
 # - Toma de datos para modelizar (QGIS)
-# - Focal statistics: extraer valores de la ortofoto
+# - Zonal statistics: extraer valores de la ortofoto
 
 # 1. Cargar paquetes -----------------------------------------------------
 
@@ -30,20 +30,20 @@ points_sf <- read_sf("00_data/03-geobia/training-points.gpkg") |>
   st_transform(crs(ortofoto_sr))
 
 
-# 3. Fstats - 1 tile -----------------------------------------------------
+# 3. zstats - 1 tile -----------------------------------------------------
 
 ## seleccionar 1 elementos de la lista
 selected_segment <- segment_list[[1]]
 
-## focal statistics
-fstats_df <- exact_extract(
+## zonal statistics
+zstats_df <- exact_extract(
   x   = ortofoto_sr,
   y   = selected_segment,
   fun = c("median", "stdev", "count", "min", "max")
 )
 
 ## añadir valores a la segmentación
-selected_segment_stats_sf <- bind_cols(selected_segment, fstats_df)
+selected_segment_stats_sf <- bind_cols(selected_segment, zstats_df)
 
 ## añadir clase, y filtrar solamente puntos que caen en esa tile
 points_selected_stats_sf <- st_join(points_sf, selected_segment_stats_sf) |> 
@@ -53,13 +53,13 @@ points_selected_stats_sf <- st_join(points_sf, selected_segment_stats_sf) |>
 mapview(selected_segment_stats_sf, color = "red", alpha.regions = 0) +
   mapview(points_selected_stats_sf, col.regions = "yellow")
 
-# 4. Fstats - Entero -----------------------------------------------------
+# 4. Zstats - Entero -----------------------------------------------------
 
-## 4.1. Focal statistics --------------------
+## 4.1. Zonal statistics --------------------
 
-## función para focal statistics
-segment_fstats <- function(segment) {
-  ## focal stats
+## función para Zonal statistics
+segment_zstats <- function(segment) {
+  ## zonal stats
   segment_stats_sf <- exact_extract(
     x   = ortofoto_sr,
     y   = segment,
@@ -70,10 +70,10 @@ segment_fstats <- function(segment) {
   bind_cols(segment, segment_stats_sf)
 }
 
-## focal statistics (duración ~ 4min)
+## zonal statistics (duración ~ 4min)
 segment_stats_list <- map(
   segment_list,
-  segment_fstats,
+  segment_zstats,
   .progress = TRUE
 )
 
