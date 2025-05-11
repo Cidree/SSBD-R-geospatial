@@ -6,13 +6,12 @@
 # OBJETIVOS:
 # - Generar modelo con {tidymodels}
 # - Evaluar modelo
-# - Aplicar modelo
 
 # 1. Cargar paquetes -----------------------------------------------------
 
 library(pacman)
 
-p_load(corrplot, kknn, sf, ranger, terra, tidymodels, tidyverse, vip)
+p_load(corrplot, kknn, ranger, sf, terra, tidymodels, tidyverse, vip)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -64,7 +63,7 @@ norm_rec <- recipe(class ~ ., data = train_tbl) |>
   step_normalize(all_numeric_predictors()) |> 
   step_rm(starts_with("max"), median.R, median.G, stdev.G, stdev.B, min.R, min.G)
 
-## visualizar correlación para actualizar step_select()
+## visualizar correlación para actualizar step_rm()
 norm_rec |> 
   prep() |> 
   juice() |> 
@@ -103,7 +102,7 @@ model_wflw <- workflow_set(
   ),
   models  = list(
     ranger = rf_spec,
-    svm    = knn_spec
+    knn    = knn_spec
   ),
   cross = FALSE
 )
@@ -134,6 +133,12 @@ grid_results <- workflow_map(
 )
 
 ## 3.6. Evaluate ---------------------------
+
+## metricas de random forest, f_meas?
+grid_results |> 
+  collect_metrics() |> 
+  filter(wflow_id == "base_ranger") |> 
+  filter(.metric == "f_meas")
 
 ## mejor modelo?
 best_model <- grid_results |> 
