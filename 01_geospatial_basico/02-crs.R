@@ -37,7 +37,7 @@ galicia_incorrecto_sf <- st_set_crs(galicia_sf, "EPSG:25829")
 mapview(galicia_incorrecto_sf)
 
 ## Procolo correcto: preguntar a quién nos dio los datos
-## - Está en EPSG:25829
+## - Está en EPSG:25828
 galicia_correcto_sf <- st_set_crs(galicia_sf, "EPSG:25828")
 
 ## Visualizar
@@ -50,3 +50,6 @@ galicia_transf_sf <- st_transform(galicia_correcto_sf, "EPSG:25829")
 
 ## explorar CRS
 st_crs(galicia_transf_sf)
+
+## visualizar
+mapview(galicia_transf_sf)

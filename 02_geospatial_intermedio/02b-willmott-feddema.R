@@ -26,7 +26,7 @@ p_load(envirem, geodata, giscoR, sf, terra, tidyverse, tidyterra)
 
 ## constantes
 selected_crs  <- "EPSG:25830"
-selected_ccaa <- "Andalucía"
+selected_ccaa <- "Andalucia"
 
 ## 2.2. Datos climáticos -----------------
 

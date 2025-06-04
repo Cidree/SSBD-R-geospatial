@@ -102,7 +102,6 @@ pet_sr <- envirem::monthlyPET(
 )
 
 ## visualizar
-## - con range modificamos los valores que se visualizan (comparable entre distintos meses)
 plot(pet_sr, col = hcl.colors(200, "Spectral", rev = TRUE))
 
 ## visualizar 2.0

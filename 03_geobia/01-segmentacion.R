@@ -36,7 +36,7 @@ plotRGB(sample_sr)
 otblink <- linkOTB(searchLocation = "C:/OTB/")
 
 ## segmentar
-segment_sr <- segm_lsms(
+segment_sf <- segm_lsms(
     image    = sample_sr,
     otb      = otblink,
     spatialr = 5,
@@ -46,10 +46,10 @@ segment_sr <- segm_lsms(
 
 ## visualizar resultado
 plotRGB(sample_sr)
-plot(sf::st_geometry(segment_sr), add = TRUE, border = "gray90")
+plot(sf::st_geometry(segment_sf), add = TRUE, border = "gray90")
 
 ## segmentar
-segment_ms_sr <- segm_meanshift(
+segment_ms_sf <- segm_meanshift(
     image    = sample_sr,
     otb      = otblink,
     spatialr = 5,
@@ -59,7 +59,7 @@ segment_ms_sr <- segm_meanshift(
 
 ## visualizar resultado
 plotRGB(sample_sr)
-plot(sf::st_geometry(segment_ms_sr), add = TRUE, border = "gray90")
+plot(sf::st_geometry(segment_ms_sf), add = TRUE, border = "gray90")
 
 # 4. Segmentación completa -----------------------------------------------
 
@@ -71,7 +71,7 @@ plot(sf::st_geometry(segment_ms_sr), add = TRUE, border = "gray90")
 ## - Menor complejidad
 
 ## segmentar (22min)
-segment_sr <- segm_meanshift(
+segment_sf <- segm_meanshift(
     image    = ortofoto_sr,
     otb      = otblink,
     spatialr = 5,

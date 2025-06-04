@@ -5,6 +5,7 @@
 
 /.quarto/
 02_geospatial_intermedio/*-sequia.R
+02_geospatial_intermedio/visualize-images.py
 00_data/03-geobia/segmentation-lsms.parquet
 00_data/03-geobia/segmentation-meanshift.parquet
 00_data/03-geobia/ortofoto-downsample.tiff
