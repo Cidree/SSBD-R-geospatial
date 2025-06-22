@@ -4,8 +4,10 @@
 .Ruserdata
 
 /.quarto/
-02_geospatial_intermedio/*-sequia.R
+02_geospatial_intermedio/999*
+02_geospatial_intermedio/02b-willmott-feddema.R
 02_geospatial_intermedio/visualize-images.py
+00_data/02-geospatial_intermedio/prec_chirps/*
 00_data/03-geobia/segmentation-lsms.parquet
 00_data/03-geobia/segmentation-meanshift.parquet
 00_data/03-geobia/ortofoto-downsample.tiff
