@@ -1,7 +1,7 @@
 # SUMMER SCHOOL - BOSQUE DIGITAL - UNIVERSIDAD DE CÓRDOBA
 #
 # Clase: Introducción al análisis geoespacial con R - Parte 2
-# Ejercicio 03b - Willmott & Feddema Moisture Index
+# Ejercicio 02b - Willmott & Feddema Moisture Index
 # 
 #
 # OBJETIVOS:
@@ -20,7 +20,15 @@
 
 library(pacman)
 
-p_load(envirem, geodata, giscoR, sf, terra, tidyverse, tidyterra)
+p_load(
+    envirem,   # cálculo de variables ambientales
+    geodata,   # descarga de datos de worldclim
+    giscoR,    # descarga de límites administrativos
+    sf,        # manejo de datos vectoriales  
+    terra,     # manejo de datos ráster
+    tidyterra, # visualización de objetos del paquete terra con ggplot2
+    tidyverse  # manejo de datos en general
+)
 
 # 2. Cargar datos --------------------------------------------------------
 
