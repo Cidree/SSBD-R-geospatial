@@ -7,7 +7,7 @@
 # - PNOA-MA-IRG-OF-ETRS89-HU29-H25-0046-2.tif
 #
 # OBJETIVOS:
-# - Descarga de ortofoto: https://1drv.ms/i/c/7105cdab7a96285a/EVoolnqrzQUggHGQ_hQAAAAByRxs-x8lM5Ixd0HuFcVccw?e=Wwbdae
+# - Descarga de ortofoto: https://we.tl/t-Q4wFUrUyFY
 # - Segmentación de imagen con large scale meanshift
 # - Segmentación imagen vs segmentación por batches
 
@@ -27,7 +27,10 @@ ortofoto_sr <- rast("00_data/03-geobia/ortofoto-downsample.tiff")
 ## para ver cuáles son los mejores parámetros para nuestro caso
 
 ## cortar area pequeña
-sample_sr <- crop(ortofoto_sr, ext(585000, 585000 + 500, 4790000, 4790000 + 500))
+sample_sr <- crop(
+    ortofoto_sr, 
+    ext(585000, 585000 + 500, 4790000, 4790000 + 500)
+)
 
 ## visualizar
 plotRGB(sample_sr)

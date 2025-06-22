@@ -22,10 +22,11 @@ names(ortofoto_sr) <- c("R", "G", "B")
 ## segmentacion
 segment_list <- map(
   list.files("00_data/03-geobia/ms_tiles/", full.names = TRUE),
-  \(x) open_dataset(x) |> st_as_sf()
+  \(x) open_dataset(x) |> st_as_sf(),
+  .progress = TRUE
 )
 
-## puntos muestreo
+## puntos entrenamiento
 points_sf <- read_sf("00_data/03-geobia/training-points.gpkg") |> 
   st_transform(crs(ortofoto_sr))
 
@@ -89,7 +90,7 @@ map2(
 
 ## cargar resultados anteriores
 # segment_stats_list <- map(
-#   list.files("00_data/03-geobia/lsms_tiles_stats/", full.names = TRUE),
+#   list.files("00_data/03-geobia/ms_tiles_stats/", full.names = TRUE),
 #   \(file) open_dataset(file) |> st_as_sf()
 # )
 

@@ -52,7 +52,7 @@ test_sf <- st_as_sf(
 dir.create("performance-test")
 
 tic()
-write_sf(test_sf |> head(500), "performance-test/test.shp")
+write_sf(test_sf, "performance-test/test.shp")
 toc()
 
 tic()

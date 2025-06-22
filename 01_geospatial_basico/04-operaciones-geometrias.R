@@ -15,7 +15,7 @@
 
 library(pacman)
 
-p_load(geodata, giscoR, sf, tidyverse)
+p_load(geodata, giscoR, mapview, sf, tidyverse)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -68,7 +68,7 @@ intersects_list <- prov_sf |>
   filter(NAME_LATN %in% c("Lugo", "Ourense")) |> 
   st_intersects(lobo_sf)
 
-## filtrar y visualizar lobos avistados en Ourense
+## filtrar y visualizar lobos avistados en cada provincia
 lobo_ourense_sf <- lobo_sf |> 
   slice(intersects_list[[2]])
 
@@ -81,7 +81,7 @@ mapview(lobo_ourense_sf) +
 st_filter(
   x = lobo_sf,
   y = prov_sf |> filter(NAME_LATN == "Ourense"),
-  .predicate = st_disjoint
+  .predicate = st_intersects
 )
 
 ## EJERCICIO: filtrar provincias colindantes con Córdoba
@@ -110,10 +110,7 @@ st_join(
 
 ## EJERCICIO: añadir columnas de provincia y CCAA a los parques nacionales
 ## - Ves algo raro al hacerlo?
-ppnn_sf |> 
-  st_join(prov_sf |> select(prov = NAME_LATN)) |> 
-  st_join(ccaa_sf |> select(ccaa = NAME_LATN)) |> 
-  relocate(geom, .after = 4)
+
 
 # 4. Transformaciones unarias --------------------------------------------
 

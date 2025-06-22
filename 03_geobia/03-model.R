@@ -137,7 +137,7 @@ grid_results <- workflow_map(
 ## metricas de random forest, f_meas?
 grid_results |> 
   collect_metrics() |> 
-  filter(wflow_id == "base_ranger") |> 
+  # filter(wflow_id == "base_ranger") |> 
   filter(.metric == "f_meas")
 
 ## mejor modelo?
@@ -148,7 +148,7 @@ best_model <- grid_results |>
   pull(wflow_id)
 
 ## cómo responde el modelo a los distintos valores de los hiperparámetros?
-autoplot(grid_results, id = "base_ranger", metric = "f_meas")
+autoplot(grid_results, id = best_model, metric = "f_meas")
 
 ## mejores hiperparámetros?
 best_parameters <- grid_results |> 
