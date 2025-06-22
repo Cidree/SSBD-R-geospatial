@@ -12,4 +12,5 @@
 00_data/03-geobia/segmentation-meanshift.parquet
 00_data/03-geobia/ortofoto-downsample.tiff
 00_data/03-geobia/rgb-nir-downsample.tiff
-00_data/test
+00_resources/02-geospatial_intermedio/eutrees4f_2022.pdf
+00_resources/02-geospatial_intermedio/feddema_2005.pdf
