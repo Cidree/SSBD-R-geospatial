@@ -7,7 +7,7 @@
 # - PNOA-MA-IRG-OF-ETRS89-HU29-H25-0046-2.tif
 #
 # OBJETIVOS:
-# - Descarga de Orfeo Toolbox
+# - Descarga de ortofoto: https://1drv.ms/i/c/7105cdab7a96285a/EVoolnqrzQUggHGQ_hQAAAAByRxs-x8lM5Ixd0HuFcVccw?e=Wwbdae
 # - Segmentación de imagen con large scale meanshift
 # - Segmentación imagen vs segmentación por batches
 

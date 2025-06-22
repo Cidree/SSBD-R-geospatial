@@ -1,7 +1,7 @@
 # SUMMER SCHOOL - BOSQUE DIGITAL - UNIVERSIDAD DE CÓRDOBA
 #
 # Clase: Introducción al análisis geoespacial con R - Parte 2
-# Ejercicio 03a - Thornthwaite Moisture Index
+# Ejercicio 02a - Thornthwaite Moisture Index
 # 
 #
 # OBJETIVOS:
@@ -22,7 +22,16 @@
 
 library(pacman)
 
-p_load(envirem, geodata, giscoR, sf, terra, tidyverse, tidyterra, units)
+p_load(
+    envirem,   # cálculo de variables ambientales
+    geodata,   # descarga de datos de worldclim
+    giscoR,    # descarga de límites administrativos
+    sf,        # manejo de datos vectoriales  
+    terra,     # manejo de datos ráster
+    tidyterra, # visualización de objetos del paquete terra con ggplot2
+    tidyverse, # manejo de datos en general
+    units      # cambio de unidades
+)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -119,11 +128,11 @@ hist(pet_sr)
 ## Indice de Humedad Global (Im): índice de humedad global del entorno
 ## Im = Ih - 0.6 * Ia
 
-## Indice de Humedad estacional (Ih): se use en climas secos para identificar y cuantificar la 
+## Indice de Humedad estacional (Ih): se usa en climas secos para identificar y cuantificar la 
 ## severidad de las condiciones de humedad
 ## Ih = (D / PET) * 100; donde D es el déficit de agua anual
 
-## Indice de Aridez estacional (Ia): se use en climas húmedos para identificar y cuantificar la 
+## Indice de Aridez estacional (Ia): se usa en climas húmedos para identificar y cuantificar la 
 ## severidad de las condiciones de sequía
 ## Ia = (S / PET) * 100; donde S es el exceso de agua anual (surplus)
 
