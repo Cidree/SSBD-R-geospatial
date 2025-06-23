@@ -1,0 +1,20 @@
+Si os interesa aprender más de R, tengo varios cursos que oferto a través de la plataforma de Udemy. En los siguientes enlaces tenéis los cursos disponibles por el precio de 9,99€ hasta el día 28 de junio.
+
+
+- Ecología espacial aplicada con R
+https://www.udemy.com/course/ecologia-espacial-aplicada-con-r/?couponCode=F07A942361E403CBD049
+
+- Mastering R - Best practices and essential tools
+https://www.udemy.com/course/mastering-r-best-practices-and-essential-tools/?couponCode=6AB588B68FDE1A474DE4
+
+- Introduction to spatial data analysis and GIS in R
+https://www.udemy.com/course/introduction-to-spatial-data-analysis-and-gis-in-r/?couponCode=6E862176A028A535360D
+
+- Quarto - Diseño de documentos profesionales en RStudio
+https://www.udemy.com/course/quarto-diseno-de-documentos-profesionales-en-rstudio/?couponCode=862EFC43C3982264A377
+
+- Introducción a análisis de datos espaciales en R
+https://www.udemy.com/course/introduccion-a-analisis-de-datos-espaciales-en-r/?couponCode=5F95142A0549CEA47BD3
+
+- Introducción a análisis y visualización de datos en R
+https://www.udemy.com/course/introduccion-a-analisis-y-visualizacion-de-datos-en-r-2023/?couponCode=A40F40EC0F644A1A28C7
