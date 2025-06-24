@@ -10,7 +10,9 @@
 
 library(pacman)
 
-p_load(arrow, geoarrow, mapview, ranger, sf, stars, terra, tidymodels, tidyverse)
+p_load(
+  arrow, geoarrow, mapview, ranger, sf, stars, terra, tidymodels, tidyterra, tidyverse
+)
 
 # 2. Cargar datos --------------------------------------------------------
 
@@ -73,6 +75,20 @@ preds_list <- map(segm_list, pred_as_rast, .progress = TRUE)
 ## juntar todos los rasters
 preds_sr <- sprc(preds_list) |> 
   merge()
+
+## visualizar
+ggplot() +
+  geom_spatraster(
+    data = preds_sr
+  ) +
+  scale_fill_manual(
+    values = c("#F7FF58", "#5FAD41", "#8ACDEA", "#76818E"),
+    name = "Clase"
+  ) +
+  theme_void() +
+  theme(
+    plot.margin = margin(r = 20)
+  )
 
 ## exportar
 writeRaster(preds_sr, "00_data/03-geobia/predicciones-ranger.tiff", overwrite = TRUE)
